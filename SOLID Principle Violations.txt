@@ -2,7 +2,9 @@ SOLID Principle Violations
 
 In ItemController.cs, the single responsibility principle is violated at line 18 and 43. The GetAll and GetById methods violate it because they make the controller do too many things: log, calculate, format, validate. The controller should only receive HTTP requests, give work to services and return HTTP responses. I can solve this violation by creating new classes for the tasks the controller handled until this moment, so that it can focus on its only responsibility. I created service classes, one for each task. I wanted to make classes dependent on interfaces, so I created interfaces for the methods in the Interfaces folder, while the classes were added in the Services folder. With this solution, I make sure that the Dependency Inversion principle is also not violated. Am restructurat codul original al controller-ului. 
 
- 
+The Liskov substitution principle is violated in Program.cs, because the dependency injection is missing. Program.cs does not get notified about the high level module's dependency on abstractions: ItemController depends on IItemReader. I need to implement this dependency in Program.cs too in order to resolve IItemReader. I also need to include the logging and statistics dependencies. In order to do this, I added line 7-9 in Program.cs. 
+
+The open-closed principle is violated in the ItemController.cs file, because the statistics calculation is hardcoded. If I wanted to implement other functions, I would need to modify the controller class, which is unwanted. I am not allowed to modify this class, only to extend it. I solved this violation by creating an detailed, active-only and cached service classes where more operations can be implemented, so I did not need to touch the Controller class.  I passed the detailed operation set to the Program.cs file via AddScoped. 
 
  
 
